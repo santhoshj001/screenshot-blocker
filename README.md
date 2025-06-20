@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![JitPack](https://jitpack.io/v/santhoshj001/screenshot-blocker.svg)](https://jitpack.io/#santhoshj001/screenshot-blocker)
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
-[![Version](https://img.shields.io/badge/Latest-v1.1.0-success.svg)](https://github.com/santhoshj001/screenshot-blocker/releases/tag/v1.1.0)
+[![Version](https://img.shields.io/badge/Latest-v1.1.1-success.svg)](https://github.com/santhoshj001/screenshot-blocker/releases/tag/v1.1.1)
 [![CI/CD](https://github.com/santhoshj001/screenshot-blocker/actions/workflows/ci.yml/badge.svg)](https://github.com/santhoshj001/screenshot-blocker/actions/workflows/ci.yml)
 
 A comprehensive and production-ready Android library that prevents screenshots and screen recording using Android's `FLAG_SECURE` feature. Built with Kotlin, zero dependencies, and designed for modern Android applications.
@@ -32,7 +32,7 @@ repositories {
 
 // In your app build.gradle.kts
 dependencies {
-    implementation("com.github.santhoshj001:screenshot-blocker:v1.1.0")
+    implementation("com.github.santhoshj001:screenshot-blocker:v1.1.1")
 }
 ```
 
@@ -45,7 +45,7 @@ repositories {
 
 // In your app build.gradle
 dependencies {
-    implementation 'com.github.santhoshj001:screenshot-blocker:v1.1.0'
+    implementation 'com.github.santhoshj001:screenshot-blocker:v1.1.1'
 }
 ```
 

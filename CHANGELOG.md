@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2024-12-22
+
+### Fixed
+- 🔧 **CI/CD Pipeline Issues** - Fixed missing gradle-wrapper.properties causing build failures
+- 🧩 **Kotlin 2.0 Compatibility** - Updated to kotlin-compose plugin, removed deprecated composeOptions
+- 🧪 **Unit Test Stability** - Fixed Mockito stubbing issues in WindowSecurePolicyTest with real Activity classes
+- 📱 **Android Instrumentation Tests** - Completely overhauled tests to be CI/CD compatible:
+  - Fixed package name assertion (com.sjdroid.screenshotblocker.test)
+  - Eliminated singleton state conflicts between tests
+  - Removed emulator-dependent assertions
+  - Made tests resilient to initialization order
+- ⚙️ **Build Configuration** - Added BuildConfig generation, fixed compilation errors
+
+### Enhanced
+- **Test Infrastructure** - More robust and reliable test suite for CI/CD environments
+- **Compose Compiler** - Updated to use new Compose Compiler Gradle plugin architecture
+- **CI/CD Reliability** - All build issues resolved, pipeline now runs successfully
+- **Documentation** - Updated version references and installation instructions
+
+### Technical
+- **Gradle Wrapper** - Fixed .gitignore to properly include gradle-wrapper.properties
+- **Kotlin Compiler** - Updated to Kotlin 2.0.21 with proper Compose support
+- **Test Framework** - Improved test isolation and state management
+- **Build System** - Enhanced configuration cache compatibility
+
 ## [1.1.0] - 2024-12-21
 
 ### Added
