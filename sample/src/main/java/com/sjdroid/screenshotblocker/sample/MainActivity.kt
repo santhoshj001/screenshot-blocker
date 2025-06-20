@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
         layout.addView(feedbackText, 0)
         
         // Remove feedback after 3 seconds
-        postDelayed({
+        feedbackText.postDelayed({
             layout.removeView(feedbackText)
         }, 3000)
     }
