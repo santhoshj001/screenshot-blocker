@@ -1,20 +1,25 @@
-# Screenshot Blocker Android Library
+# 🛡️ Screenshot Blocker
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![JitPack](https://jitpack.io/v/santhoshj001/screenshot-blocker.svg)](https://jitpack.io/#santhoshj001/screenshot-blocker)
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
+[![Version](https://img.shields.io/badge/Latest-v1.1.0-success.svg)](https://github.com/santhoshj001/screenshot-blocker/releases/tag/v1.1.0)
+[![CI/CD](https://github.com/santhoshj001/screenshot-blocker/actions/workflows/ci.yml/badge.svg)](https://github.com/santhoshj001/screenshot-blocker/actions/workflows/ci.yml)
 
-A lightweight, production-ready Android library that blocks screenshots using Android's built-in `FLAG_SECURE` feature. Simple to integrate, zero dependencies, and works with both View-based and Jetpack Compose applications.
+A comprehensive and production-ready Android library that prevents screenshots and screen recording using Android's `FLAG_SECURE` feature. Built with Kotlin, zero dependencies, and designed for modern Android applications.
 
 ## ✨ Features
 
-- **🛡️ Global Screenshot Blocking**: Automatically protect all activities in your app
-- **🎯 Per-Activity Control**: Fine-grained control over specific screens
-- **🪶 Lightweight**: Zero third-party dependencies, minimal footprint
-- **🔒 Safe & Reliable**: Uses only standard Android APIs, no reflection or hacks
-- **⚡ Easy Integration**: Simple one-line initialization
-- **🧩 Compose Ready**: Fully compatible with Jetpack Compose and traditional Views
-- **📱 Modern Android**: Supports API 21+ with latest Android features
+- 🔒 **Global & Per-Activity Control** - Protect entire app or specific screens
+- 🎯 **Lifecycle-Aware** - Automatically handles activity lifecycle events  
+- 🧩 **Jetpack Compose Support** - Native composables and modifiers
+- 📋 **Policy-Based Control** - Fine-grained control with custom policies
+- 🐛 **Debug Override** - Automatically disable in debug builds
+- 🔍 **Runtime Introspection** - Check security status programmatically
+- ☕ **Java Friendly** - Full Java interoperability
+- 📱 **API 21+** - Supports Android 5.0 and above
+- 🚀 **Zero Dependencies** - Uses only standard Android APIs
+- 🧪 **Thoroughly Tested** - Unit and instrumentation tests
 
 ## 📦 Installation
 
@@ -27,7 +32,7 @@ repositories {
 
 // In your app build.gradle.kts
 dependencies {
-    implementation("com.github.santhoshj001:screenshot-blocker:v1.0.0")
+    implementation("com.github.santhoshj001:screenshot-blocker:v1.1.0")
 }
 ```
 
@@ -40,7 +45,7 @@ repositories {
 
 // In your app build.gradle
 dependencies {
-    implementation 'com.github.santhoshj001:screenshot-blocker:v1.0.0'
+    implementation 'com.github.santhoshj001:screenshot-blocker:v1.1.0'
 }
 ```
 

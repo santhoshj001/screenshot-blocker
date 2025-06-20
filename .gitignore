@@ -93,6 +93,7 @@ lint/tmp/
 # Local configuration
 *.properties
 !gradle.properties
+!gradle/wrapper/gradle-wrapper.properties
 
 # Temporary files
 *.tmp
