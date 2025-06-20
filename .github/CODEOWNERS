@@ -1,0 +1,23 @@
+# Global ownership - All files require approval from the repository owner
+* @santhoshj001
+
+# Critical library files - Extra scrutiny required
+/screenshotblocker/src/main/java/com/sjdroid/screenshotblocker/*.kt @santhoshj001
+/screenshotblocker/build.gradle.kts @santhoshj001
+/gradle/libs.versions.toml @santhoshj001
+/gradle.properties @santhoshj001
+
+# Release and versioning files
+/CHANGELOG.md @santhoshj001
+/jitpack.yml @santhoshj001
+
+# Documentation that affects public API
+/README.md @santhoshj001
+/CONTRIBUTING.md @santhoshj001
+
+# GitHub workflows and actions
+/.github/ @santhoshj001
+
+# Any Gradle or build configuration changes
+*.gradle* @santhoshj001
+*gradle* @santhoshj001 

@@ -1,0 +1,102 @@
+name: ❓ Question
+description: Ask a question about usage or implementation
+title: "[Question]: "
+labels: ["question", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question? We're here to help! Please provide details so we can assist you effectively.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: Please confirm you have done the following
+      options:
+        - label: I have checked the README.md documentation
+          required: true
+        - label: I have looked at the sample app for examples
+          required: true
+        - label: I have searched existing issues and discussions
+          required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Question Category
+      description: What type of question is this?
+      options:
+        - Installation and Setup
+        - Basic Usage
+        - Advanced Configuration
+        - Jetpack Compose Integration
+        - Policy Configuration
+        - Troubleshooting
+        - Performance
+        - Security
+        - Java Interoperability
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: Please describe your question in detail...
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What are you trying to achieve? What's your use case?
+      placeholder: I'm trying to... / My goal is... / I want to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: attempted
+    attributes:
+      label: What Have You Tried?
+      description: What approaches have you already attempted?
+      placeholder: I tried... / I looked at... / I attempted...
+    validations:
+      required: false
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Current Code
+      description: Share relevant code you're working with
+      render: kotlin
+      placeholder: |
+        // Your current implementation
+        ScreenshotBlocker.init(this)
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment (if relevant)
+      description: Environment details if related to your question
+      value: |
+        - **Library Version**: 
+        - **Android Version**: 
+        - **Device Type**: 
+        - **API Level**: 
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: Any other context that might be helpful
+      placeholder: Additional context...
+    validations:
+      required: false 

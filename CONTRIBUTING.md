@@ -1,192 +1,260 @@
 # Contributing to Screenshot Blocker
 
-Thank you for your interest in contributing to Screenshot Blocker! We welcome contributions from the community.
+Thank you for your interest in contributing to Screenshot Blocker! This document provides guidelines for contributing to this project while respecting the project's governance model.
 
-## Development Setup
+## 🏛️ Project Governance
 
-1. **Clone the repository:**
+**Important**: This project is maintained by [@santhoshj001](https://github.com/santhoshj001) as the sole maintainer. All contributions are welcome, but:
+
+- ✅ **You can**: Fork, create issues, submit pull requests, suggest features
+- ❌ **You cannot**: Push directly to main branch, merge PRs, publish releases
+- 🔍 **All PRs**: Require explicit approval from the maintainer before merging
+- 📋 **CODEOWNERS**: Ensures maintainer review on all critical files
+
+This governance model ensures library stability and security while welcoming community contributions.
+
+---
+
+## 🚀 Getting Started
+
+### Fork and Clone
+1. **Fork the repository** on GitHub to your account
+2. **Clone your fork** locally:
    ```bash
-   git clone https://github.com/sjdroid/screenshot-blocker.git
+   git clone https://github.com/YOUR_USERNAME/screenshot-blocker.git
    cd screenshot-blocker
    ```
-
-2. **Open in Android Studio:**
-   - Open Android Studio
-   - Select "Open an existing Android Studio project"
-   - Navigate to the cloned repository and select it
-
-3. **Build the project:**
+3. **Add upstream remote** (to sync with main repo):
    ```bash
-   ./gradlew clean build
+   git remote add upstream https://github.com/santhoshj001/screenshot-blocker.git
    ```
 
-4. **Run tests:**
-   ```bash
-   ./gradlew test
-   ./gradlew connectedAndroidTest
-   ```
+### Development Setup
 
-## Project Structure
+#### Prerequisites
+- **Android Studio**: Hedgehog (2023.1.1) or later
+- **JDK**: 17 or later
+- **Android SDK**: API 21+ (Android 5.0 Lollipop)
+- **Git**: For version control
 
-```
-ScreenShotBlocker/
-├── app/                          # Library module
-│   ├── src/main/java/           # Main source code
-│   │   └── com/sjdroid/screenshotblocker/
-│   │       ├── ScreenshotBlocker.kt           # Main library class
-│   │       └── ActivityLifecycleCallbacksAdapter.kt # Utility class
-│   ├── src/test/java/           # Unit tests
-│   └── src/androidTest/java/    # Instrumented tests
-├── build.gradle.kts             # Root build script
-├── README.md                    # Project documentation
-└── LICENSE                      # Apache 2.0 License
-```
-
-## Code Style
-
-This project follows the [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html).
-
-### Key Guidelines:
-
-- Use 4 spaces for indentation
-- Keep lines under 120 characters
-- Use meaningful variable and function names
-- Add KDoc comments for public APIs
-- Follow the existing naming conventions
-
-## Testing
-
-### Unit Tests
-
-All new functionality should include comprehensive unit tests:
-
-```kotlin
-@Test
-fun `test new feature functionality`() {
-    // Arrange
-    // Act 
-    // Assert
-}
-```
-
-### Running Tests
-
+#### Building the Project
 ```bash
-# Unit tests
+# Build the library
+./gradlew :screenshotblocker:build
+
+# Build sample app
+./gradlew :sample:build
+
+# Build everything
+./gradlew build
+```
+
+#### Running Tests
+```bash
+# Unit tests only
 ./gradlew test
 
-# Instrumented tests (requires connected Android device/emulator)
+# Instrumentation tests (requires device/emulator)
 ./gradlew connectedAndroidTest
 
 # All tests
 ./gradlew check
 ```
 
-## Submitting Changes
+---
 
-### Before Submitting
+## 🎯 Types of Contributions
 
-1. **Run all tests:** Ensure all tests pass
-2. **Check code style:** Follow the project's coding conventions
-3. **Update documentation:** Update README.md if needed
-4. **Write clear commit messages:** Use descriptive commit messages
+### 🐛 Bug Reports
+- Use GitHub Issues with the "bug" label
+- Include Android version, device info, and reproduction steps
+- Provide stack traces and relevant logs
+- Search existing issues first to avoid duplicates
 
-### Pull Request Process
+### ✨ Feature Requests
+- Use GitHub Issues with the "enhancement" label
+- Clearly describe the problem your feature solves
+- Provide use cases and examples
+- Consider if the feature aligns with the library's core purpose
 
-1. **Fork the repository** on GitHub
-2. **Create a feature branch** from `main`:
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. **Make your changes** and commit them:
-   ```bash
-   git commit -m "Add feature: description of what you added"
-   ```
-4. **Push to your fork:**
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-5. **Create a Pull Request** on GitHub
+### 📖 Documentation Improvements
+- Fix typos, improve clarity, add examples
+- Update API documentation and code comments
+- Improve README and contributing guides
 
-### Pull Request Guidelines
+### 🧪 Test Improvements
+- Add missing test coverage
+- Improve existing tests
+- Add integration or performance tests
 
-- **Title:** Use a clear, descriptive title
-- **Description:** Explain what changes you made and why
-- **Testing:** Describe how you tested your changes
-- **Breaking Changes:** Clearly indicate any breaking changes
+### 🔧 Code Contributions
+- Bug fixes and performance improvements
+- New features (discuss in issues first)
+- Code refactoring and optimization
 
-## Types of Contributions
+---
 
-### Bug Reports
+## 🛠️ Development Guidelines
 
-When reporting bugs, please include:
+### Code Style & Standards
+- **Kotlin**: Follow [official conventions](https://kotlinlang.org/docs/coding-conventions.html)
+- **Formatting**: Use Android Studio default formatter
+- **Documentation**: Add KDoc for all public APIs
+- **Naming**: Use clear, descriptive names
+- **Functions**: Keep small and focused (< 20 lines preferred)
 
-- **Description:** Clear description of the issue
-- **Steps to reproduce:** Detailed steps to reproduce the bug
-- **Expected behavior:** What you expected to happen
-- **Actual behavior:** What actually happened
-- **Environment:** Android version, device info, library version
-- **Code sample:** Minimal code that reproduces the issue
+### API Design Principles
+- **Backward compatibility**: Don't break existing APIs
+- **Simplicity**: Keep APIs simple and intuitive  
+- **Safety**: Fail gracefully, handle edge cases
+- **Performance**: Minimal overhead and memory usage
+- **Testing**: All public APIs must be testable
 
-### Feature Requests
+### Security Considerations
+- **No sensitive data logging**
+- **Validate all inputs**
+- **Handle permissions safely**
+- **Consider edge cases and malicious usage**
 
-When requesting features:
+---
 
-- **Use case:** Describe why this feature would be useful
-- **Proposed solution:** How you think it should work
-- **Alternatives:** Other solutions you've considered
+## 📋 Submission Process
 
-### Code Contributions
+### 1. Before You Start
+- **Check existing issues** to see if someone is already working on it
+- **Create an issue** for new features to discuss the approach
+- **Keep changes focused** - one PR per feature/fix
 
-We welcome contributions for:
+### 2. Development Workflow
+```bash
+# Sync with upstream
+git fetch upstream
+git checkout main
+git merge upstream/main
 
-- **Bug fixes**
-- **New features** (please discuss large changes first)
-- **Performance improvements**
-- **Documentation improvements**
-- **Test coverage improvements**
+# Create feature branch
+git checkout -b feature/your-feature-name
 
-## Development Guidelines
+# Make your changes, commit frequently
+git add .
+git commit -m "Clear, descriptive commit message"
 
-### API Design
+# Push to your fork
+git push origin feature/your-feature-name
+```
 
-- **Keep it simple:** The API should be easy to use
-- **Follow Android conventions:** Use familiar Android patterns
-- **Backward compatibility:** Avoid breaking changes when possible
-- **Thread safety:** Document thread safety requirements
+### 3. Pull Request Requirements
 
-### Performance
+#### Must Have:
+- [ ] **Clear description** of changes and motivation
+- [ ] **Tests added/updated** for new functionality
+- [ ] **Documentation updated** if API changes
+- [ ] **All existing tests pass**
+- [ ] **No breaking changes** (unless explicitly discussed)
+- [ ] **CHANGELOG.md updated** for user-facing changes
 
-- **Minimal overhead:** Keep performance impact minimal
-- **Memory efficient:** Avoid memory leaks
-- **Battery conscious:** Don't drain battery unnecessarily
+#### Code Quality:
+- [ ] **Self-reviewed** your own code
+- [ ] **Comments added** for complex logic
+- [ ] **No compiler warnings** introduced
+- [ ] **Follows project conventions**
 
-### Security
+#### Testing:
+- [ ] **Unit tests pass**: `./gradlew test`
+- [ ] **Integration tests pass**: `./gradlew connectedAndroidTest`
+- [ ] **Manual testing completed** on real device
+- [ ] **Multiple API levels tested** (21, 28, 33+)
 
-- **No sensitive data logging:** Never log sensitive information
-- **Minimal permissions:** Only request necessary permissions
-- **Safe defaults:** Use secure defaults
+### 4. PR Review Process
+1. **Automated checks** must pass (CI/CD)
+2. **Code review** by maintainer (@santhoshj001)
+3. **Feedback addressed** and changes requested implemented
+4. **Final approval** and merge by maintainer
 
-## Release Process
+---
 
-1. **Update CHANGELOG.md** with release notes
-2. **Create release tag:** `git tag v1.0.0`
-3. **Push tag:** `git push origin v1.0.0`
-4. **JitPack will automatically build** from the new tag
+## ⚠️ Important Notes
 
-## Getting Help
+### Response Times
+- **Issues**: Typically acknowledged within 48 hours
+- **Pull Requests**: Initial review within 1 week
+- **Complex PRs**: May take longer for thorough review
 
-- **Questions:** Open a [GitHub Discussion](https://github.com/sjdroid/screenshot-blocker/discussions)
-- **Issues:** Report bugs via [GitHub Issues](https://github.com/sjdroid/screenshot-blocker/issues)
-- **Documentation:** Check the [README.md](README.md) first
+### What Gets Priority
+1. **Critical bug fixes** affecting security or stability
+2. **Well-documented features** with clear use cases
+3. **Performance improvements** with benchmarks
+4. **Documentation improvements**
+5. **Test coverage improvements**
 
-## Code of Conduct
+### What Might Be Rejected
+- **Breaking changes** without compelling reason
+- **Features outside core scope** (screenshot blocking)
+- **Poorly tested code**
+- **Code that doesn't follow project conventions**
+- **Duplicate functionality**
 
-By participating in this project, you agree to abide by our Code of Conduct:
+---
 
-- **Be respectful** and inclusive
-- **Be collaborative** and helpful
-- **Be patient** with newcomers
-- **Focus on the best outcome** for the community
+## 🤝 Code of Conduct
 
-Thank you for contributing! 🎉 
+### Be Respectful
+- **Constructive feedback** only
+- **Professional communication**
+- **Inclusive language**
+- **No harassment or discrimination**
+
+### Be Collaborative
+- **Help others** in issues and discussions
+- **Share knowledge** and best practices
+- **Credit contributors** appropriately
+
+### Be Patient
+- **Maintainer is human** with limited time
+- **Quality takes time** - thorough reviews prevent bugs
+- **Open source is volunteer work**
+
+---
+
+## 🆘 Getting Help
+
+### Questions About:
+- **Usage**: Check README.md and sample app first
+- **Contributing**: Create an issue with "question" label
+- **Bugs**: Follow bug report template
+- **Features**: Create feature request issue
+
+### Resources:
+- 📖 **Documentation**: [README.md](README.md)
+- 🏗️ **Sample App**: `/sample` directory
+- 🧪 **Tests**: `/screenshotblocker/src/test`
+- 🤖 **CI/CD**: `.github/workflows/`
+
+---
+
+## 📜 Release Process (Maintainer Only)
+
+For transparency, here's how releases work:
+
+1. **Version bump** in relevant files
+2. **CHANGELOG.md** updated with changes
+3. **Git tag** created (`v1.x.x`)
+4. **GitHub release** published
+5. **JitPack** automatically builds and publishes
+
+Contributors cannot perform releases, but can suggest version bumps in PRs.
+
+---
+
+## 🙏 Recognition
+
+All contributors are recognized in:
+- **GitHub contributors** page
+- **CHANGELOG.md** for significant contributions
+- **Special thanks** for major features/fixes
+
+---
+
+**Thank you for helping make Screenshot Blocker better! 🛡️📱**
+
+Questions? Feel free to open an issue or start a discussion! 
