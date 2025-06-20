@@ -90,15 +90,9 @@ lint/tmp/
 # macOS
 .DS_Store
 
-# Maven/Gradle publishing
+# Local configuration
 *.properties
 !gradle.properties
-
-# Signing files
-*.keystore
-*.jks
-secring.gpg
-signing.properties
 
 # Temporary files
 *.tmp

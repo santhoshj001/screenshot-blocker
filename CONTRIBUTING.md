@@ -169,11 +169,10 @@ We welcome contributions for:
 
 ## Release Process
 
-1. **Update version** in `build.gradle.kts`
-2. **Update CHANGELOG.md** with release notes
-3. **Create release tag:** `git tag v1.0.0`
-4. **Push tag:** `git push origin v1.0.0`
-5. **Publish to Maven Central**
+1. **Update CHANGELOG.md** with release notes
+2. **Create release tag:** `git tag v1.0.0`
+3. **Push tag:** `git push origin v1.0.0`
+4. **JitPack will automatically build** from the new tag
 
 ## Getting Help
 

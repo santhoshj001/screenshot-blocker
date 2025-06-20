@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Per-activity screenshot control with `enableFor()` and `disableFor()` methods
 - `ActivityLifecycleCallbacksAdapter` utility class for easier lifecycle management
 - Comprehensive unit tests and instrumented tests
-- Maven Central publishing configuration
+- JitPack distribution setup
 - Complete documentation with README.md
 - Apache 2.0 License
 - Contributing guidelines
@@ -50,9 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allows extending only the methods you need
 
 ### Package Info
-- **Group ID**: `io.github.sjdroid`
-- **Artifact ID**: `screenshot-blocker`
-- **Version**: `1.0.0`
+- **Repository**: `com.github.santhoshj001:screenshot-blocker`
+- **Version**: `v1.0.0`
 
 ---
 
@@ -97,7 +96,7 @@ ScreenshotBlocker.enableFor(this)
 This library provides a simpler, more reliable approach:
 
 1. Remove your existing screenshot blocking dependency
-2. Add Screenshot Blocker: `implementation("io.github.sjdroid:screenshot-blocker:1.0.0")`
+2. Add JitPack repository and Screenshot Blocker dependency
 3. Initialize in your Application class: `ScreenshotBlocker.init(this)`
 4. Remove any manual FLAG_SECURE implementations
 

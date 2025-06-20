@@ -1,7 +1,7 @@
 # Screenshot Blocker Android Library
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.sjdroid/screenshot-blocker.svg)](https://central.sonatype.com/artifact/io.github.sjdroid/screenshot-blocker)
+[![JitPack](https://jitpack.io/v/santhoshj001/screenshot-blocker.svg)](https://jitpack.io/#santhoshj001/screenshot-blocker)
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
 
 A lightweight, production-ready Android library that blocks screenshots using Android's built-in `FLAG_SECURE` feature. Simple to integrate, zero dependencies, and works with both View-based and Jetpack Compose applications.
@@ -18,19 +18,29 @@ A lightweight, production-ready Android library that blocks screenshots using An
 
 ## 📦 Installation
 
-### Gradle (Kotlin DSL)
-
+### Kotlin DSL
 ```kotlin
+// In your root build.gradle.kts
+repositories {
+    maven { url = uri("https://jitpack.io") }
+}
+
+// In your app build.gradle.kts
 dependencies {
-    implementation("io.github.sjdroid:screenshot-blocker:1.0.0")
+    implementation("com.github.santhoshj001:screenshot-blocker:v1.0.0")
 }
 ```
 
-### Gradle (Groovy)
-
+### Groovy DSL
 ```groovy
+// In your root build.gradle
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+// In your app build.gradle
 dependencies {
-    implementation 'io.github.sjdroid:screenshot-blocker:1.0.0'
+    implementation 'com.github.santhoshj001:screenshot-blocker:v1.0.0'
 }
 ```
 
