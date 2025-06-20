@@ -3,48 +3,60 @@ package com.sjdroid.screenshotblocker
 import android.app.Activity
 import org.junit.Test
 import org.junit.Assert.*
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 /**
  * Unit tests for WindowSecurePolicy implementations
  */
 class WindowSecurePolicyTest {
     
-    private val mockActivity = mock<Activity>()
+    // Test activities for testing
+    class TestActivity : Activity()
+    class LoginActivity : Activity()
+    class PaymentActivity : Activity()
+    class SecureActivity : Activity()
+    class MainActivity : Activity()
+    
+    @SecureScreen
+    class AnnotatedActivity : Activity()
+    
+    class NonAnnotatedActivity : Activity()
     
     @Test
     fun `AlwaysSecurePolicy should always return true`() {
         val policy = AlwaysSecurePolicy()
-        assertTrue(policy.shouldSecure(mockActivity))
+        val activity = TestActivity()
+        assertTrue(policy.shouldSecure(activity))
     }
     
     @Test
     fun `NeverSecurePolicy should always return false`() {
         val policy = NeverSecurePolicy()
-        assertFalse(policy.shouldSecure(mockActivity))
+        val activity = TestActivity()
+        assertFalse(policy.shouldSecure(activity))
     }
     
     @Test
     fun `ConditionalSecurePolicy should secure matching activity by full class name`() {
-        val policy = ConditionalSecurePolicy("com.example.SecureActivity")
+        val policy = ConditionalSecurePolicy(
+            "com.sjdroid.screenshotblocker.WindowSecurePolicyTest\$SecureActivity"
+        )
         
-        whenever(mockActivity.javaClass.name).thenReturn("com.example.SecureActivity")
-        assertTrue(policy.shouldSecure(mockActivity))
+        val secureActivity = SecureActivity()
+        val mainActivity = MainActivity()
         
-        whenever(mockActivity.javaClass.name).thenReturn("com.example.MainActivity")
-        assertFalse(policy.shouldSecure(mockActivity))
+        assertTrue(policy.shouldSecure(secureActivity))
+        assertFalse(policy.shouldSecure(mainActivity))
     }
     
     @Test
     fun `ConditionalSecurePolicy should secure matching activity by simple class name`() {
         val policy = ConditionalSecurePolicy("SecureActivity")
         
-        whenever(mockActivity.javaClass.simpleName).thenReturn("SecureActivity")
-        assertTrue(policy.shouldSecure(mockActivity))
+        val secureActivity = SecureActivity()
+        val mainActivity = MainActivity()
         
-        whenever(mockActivity.javaClass.simpleName).thenReturn("MainActivity")
-        assertFalse(policy.shouldSecure(mockActivity))
+        assertTrue(policy.shouldSecure(secureActivity))
+        assertFalse(policy.shouldSecure(mainActivity))
     }
     
     @Test
@@ -52,29 +64,17 @@ class WindowSecurePolicyTest {
         val policy = ConditionalSecurePolicy("LoginActivity", "PaymentActivity", "SecureActivity")
         
         // Test matching activities
-        whenever(mockActivity.javaClass.simpleName).thenReturn("LoginActivity")
-        assertTrue(policy.shouldSecure(mockActivity))
-        
-        whenever(mockActivity.javaClass.simpleName).thenReturn("PaymentActivity")
-        assertTrue(policy.shouldSecure(mockActivity))
-        
-        whenever(mockActivity.javaClass.simpleName).thenReturn("SecureActivity")
-        assertTrue(policy.shouldSecure(mockActivity))
+        assertTrue(policy.shouldSecure(LoginActivity()))
+        assertTrue(policy.shouldSecure(PaymentActivity()))
+        assertTrue(policy.shouldSecure(SecureActivity()))
         
         // Test non-matching activity
-        whenever(mockActivity.javaClass.simpleName).thenReturn("MainActivity")
-        assertFalse(policy.shouldSecure(mockActivity))
+        assertFalse(policy.shouldSecure(MainActivity()))
     }
     
     @Test
     fun `AnnotationBasedSecurePolicy should secure annotated activities`() {
         val policy = AnnotationBasedSecurePolicy()
-        
-        // Create a real class that can be annotated for testing
-        @SecureScreen
-        class AnnotatedActivity : Activity()
-        
-        class NonAnnotatedActivity : Activity()
         
         val annotatedActivity = AnnotatedActivity()
         val nonAnnotatedActivity = NonAnnotatedActivity()
@@ -89,19 +89,20 @@ class WindowSecurePolicyTest {
         val alwaysFalse = NeverSecurePolicy()
         val conditional = ConditionalSecurePolicy("TestActivity")
         
-        whenever(mockActivity.javaClass.simpleName).thenReturn("TestActivity")
+        val testActivity = TestActivity()
+        val mainActivity = MainActivity()
         
         // All true policies
         val allTruePolicy = AndSecurePolicy(alwaysTrue, conditional)
-        assertTrue(allTruePolicy.shouldSecure(mockActivity))
+        assertTrue(allTruePolicy.shouldSecure(testActivity))
         
         // Mix of true and false
         val mixedPolicy = AndSecurePolicy(alwaysTrue, alwaysFalse, conditional)
-        assertFalse(mixedPolicy.shouldSecure(mockActivity))
+        assertFalse(mixedPolicy.shouldSecure(testActivity))
         
-        // All false policies
-        val allFalsePolicy = AndSecurePolicy(alwaysFalse)
-        assertFalse(allFalsePolicy.shouldSecure(mockActivity))
+        // All false policies (conditional returns false for MainActivity)
+        val allFalsePolicy = AndSecurePolicy(alwaysFalse, conditional)
+        assertFalse(allFalsePolicy.shouldSecure(mainActivity))
     }
     
     @Test
@@ -110,21 +111,20 @@ class WindowSecurePolicyTest {
         val alwaysFalse = NeverSecurePolicy()
         val conditional = ConditionalSecurePolicy("TestActivity")
         
-        whenever(mockActivity.javaClass.simpleName).thenReturn("OtherActivity")
+        val testActivity = TestActivity()
+        val mainActivity = MainActivity()
         
         // At least one true policy
         val mixedPolicy = OrSecurePolicy(alwaysFalse, alwaysTrue, conditional)
-        assertTrue(mixedPolicy.shouldSecure(mockActivity))
+        assertTrue(mixedPolicy.shouldSecure(mainActivity)) // alwaysTrue makes it true
         
         // All false policies
         val allFalsePolicy = OrSecurePolicy(alwaysFalse, conditional)
-        assertFalse(allFalsePolicy.shouldSecure(mockActivity))
-        
-        whenever(mockActivity.javaClass.simpleName).thenReturn("TestActivity")
+        assertFalse(allFalsePolicy.shouldSecure(mainActivity)) // Both false for MainActivity
         
         // Conditional becomes true
         val conditionalTruePolicy = OrSecurePolicy(alwaysFalse, conditional)
-        assertTrue(conditionalTruePolicy.shouldSecure(mockActivity))
+        assertTrue(conditionalTruePolicy.shouldSecure(testActivity)) // conditional true for TestActivity
     }
     
     @Test
@@ -132,10 +132,10 @@ class WindowSecurePolicyTest {
         val policy1 = AlwaysSecurePolicy()
         val policy2 = ConditionalSecurePolicy("TestActivity")
         
-        whenever(mockActivity.javaClass.simpleName).thenReturn("TestActivity")
+        val testActivity = TestActivity()
         
         val andPolicy = AndSecurePolicy(policy1, policy2)
-        assertTrue(andPolicy.shouldSecure(mockActivity))
+        assertTrue(andPolicy.shouldSecure(testActivity))
     }
     
     @Test
@@ -143,10 +143,10 @@ class WindowSecurePolicyTest {
         val policy1 = NeverSecurePolicy()
         val policy2 = ConditionalSecurePolicy("TestActivity")
         
-        whenever(mockActivity.javaClass.simpleName).thenReturn("TestActivity")
+        val testActivity = TestActivity()
         
         val orPolicy = OrSecurePolicy(policy1, policy2)
-        assertTrue(orPolicy.shouldSecure(mockActivity))
+        assertTrue(orPolicy.shouldSecure(testActivity))
     }
     
     @Test
@@ -155,17 +155,18 @@ class WindowSecurePolicyTest {
         val conditionalPolicy = ConditionalSecurePolicy("PaymentActivity")
         val neverPolicy = NeverSecurePolicy()
         
+        val paymentActivity = PaymentActivity()
+        
         // OR(annotation, conditional) AND NOT(never)
         val complexPolicy = AndSecurePolicy(
             OrSecurePolicy(annotationPolicy, conditionalPolicy),
             neverPolicy // This will always be false, so AND will be false
         )
         
-        whenever(mockActivity.javaClass.simpleName).thenReturn("PaymentActivity")
-        assertFalse(complexPolicy.shouldSecure(mockActivity)) // AND with NeverSecurePolicy = false
+        assertFalse(complexPolicy.shouldSecure(paymentActivity)) // AND with NeverSecurePolicy = false
         
         // OR(annotation, conditional) - without the AND
         val simpleOrPolicy = OrSecurePolicy(annotationPolicy, conditionalPolicy)
-        assertTrue(simpleOrPolicy.shouldSecure(mockActivity)) // PaymentActivity matches conditional
+        assertTrue(simpleOrPolicy.shouldSecure(paymentActivity)) // PaymentActivity matches conditional
     }
 } 
