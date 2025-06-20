@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2024-12-21
+
+### Added
+- 🎯 **Lifecycle-aware behavior** - Enhanced activity lifecycle handling with automatic cleanup
+- 🧩 **Jetpack Compose support** - `SecureScreen` composable and `Modifier.secure()` extension
+- 🐛 **Debug override** - Automatic security disabling in debug builds via `BuildConfig.DEBUG` 
+- 🔍 **Runtime introspection APIs** - New methods: `isSecureEnabled()`, `isDebugMode()`, `getSecuredActivitiesCount()`
+- 📋 **WindowSecurePolicy interface** - Fine-grained control with custom security policies:
+  - `AlwaysSecurePolicy` - Secure all activities
+  - `NeverSecurePolicy` - Never secure activities (useful for testing)
+  - `ConditionalSecurePolicy` - Secure specific activities by class name
+  - `AnnotationBasedSecurePolicy` - Secure activities annotated with `@SecureScreen`
+  - `AndSecurePolicy` / `OrSecurePolicy` - Combine multiple policies with logical operators
+- 🔧 **Enhanced initialization** - New optional parameters for debug mode and custom policies
+- ☕ **Better Java interoperability** - Added `@JvmStatic` and `@JvmOverloads` annotations
+- 🚀 **CI/CD pipeline** - GitHub Actions workflow with automated testing and quality checks
+- 📊 **Code quality tools** - Integrated lint checks and detekt for better code quality
+- 🎨 **Enhanced sample app** - Modern Compose UI demonstrating all library features
+
+### Enhanced
+- **ScreenshotBlocker.init()** - Now supports `debugMode` and `policy` parameters
+- **Activity tracking** - Improved memory management and automatic cleanup on activity destruction
+- **Error handling** - More robust exception handling for edge cases and activity lifecycle
+- **Documentation** - Comprehensive updates with usage examples and platform limitations
+
+### Security
+- **Policy-based security** - Flexible, configurable control over when FLAG_SECURE is applied
+- **Debug mode safety** - Prevents accidental security bypass in production builds
+- **Memory management** - Better tracking and cleanup of secured activities
+
 ## [1.0.0] - 2024-06-20
 
 ### Added

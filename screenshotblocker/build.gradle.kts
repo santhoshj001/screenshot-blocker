@@ -31,11 +31,24 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.8"
+    }
 }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    
+    // Compose dependencies (optional - only used if app includes Compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.activity.compose)
     
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
