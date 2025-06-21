@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.view.WindowManager
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * ScreenshotBlocker - A comprehensive Android library to block screenshots using FLAG_SECURE
@@ -25,15 +26,15 @@ import android.view.WindowManager
  * 4. Custom policies: ScreenshotBlocker.setPolicy(ConditionalSecurePolicy("LoginActivity"))
  * 
  * @author Santhosh J.
- * @version 1.1.0
+ * @version 1.1.1
  */
 object ScreenshotBlocker {
     
     private var globalEnable = false
-    private var isInitialized = false
+    private var initialized = false
     private var debugOverride = false
     private var currentPolicy: WindowSecurePolicy? = null
-    private val secureActivities = mutableSetOf<String>()
+    private val secureActivities = ConcurrentHashMap.newKeySet<String>()
     
     /**
      * Initialize the ScreenshotBlocker with global settings
@@ -51,21 +52,27 @@ object ScreenshotBlocker {
         debugMode: Boolean? = null,
         policy: WindowSecurePolicy? = null
     ) {
-        if (isInitialized) {
+        if (initialized) {
             return // Already initialized
         }
         
         globalEnable = enableGlobally
-        isInitialized = true
+        initialized = true
         currentPolicy = policy
         
         // Auto-detect debug mode if not specified
         debugOverride = debugMode ?: try {
-            val buildConfigClass = Class.forName("${application.packageName}.BuildConfig")
-            val debugField = buildConfigClass.getField("DEBUG")
-            debugField.getBoolean(null)
+            // More reliable debug detection
+            (application.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
         } catch (e: Exception) {
-            false // Default to production mode if BuildConfig not accessible
+            // Fallback to BuildConfig reflection
+            try {
+                val buildConfigClass = Class.forName("${application.packageName}.BuildConfig")
+                val debugField = buildConfigClass.getField("DEBUG")
+                debugField.getBoolean(null)
+            } catch (e2: Exception) {
+                false // Default to production mode if both methods fail
+            }
         }
         
         application.registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacksAdapter() {
@@ -141,7 +148,7 @@ object ScreenshotBlocker {
      */
     @JvmStatic
     fun isSecureEnabled(context: Context): Boolean {
-        if (!isInitialized || debugOverride) {
+        if (!initialized || debugOverride) {
             return false
         }
         
@@ -167,7 +174,7 @@ object ScreenshotBlocker {
      * @return true if initialized, false otherwise
      */
     @JvmStatic
-    fun isInitialized(): Boolean = isInitialized
+    fun isInitialized(): Boolean = initialized
     
     /**
      * Check if debug mode is active (security disabled)
@@ -206,16 +213,25 @@ object ScreenshotBlocker {
         }
         
         try {
+            // Check if activity is still valid
+            if (activity.isFinishing || activity.isDestroyed) {
+                return
+            }
+            
+            val window = activity.window
             if (enable) {
-                activity.window.setFlags(
+                window.setFlags(
                     WindowManager.LayoutParams.FLAG_SECURE,
                     WindowManager.LayoutParams.FLAG_SECURE
                 )
             } else {
-                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
             }
         } catch (e: Exception) {
-            // Silently fail if there's an issue (e.g., activity is finishing)
+            // Log in debug mode, but don't crash in production
+            if (debugOverride) {
+                android.util.Log.w("ScreenshotBlocker", "Failed to apply secure flag", e)
+            }
         }
     }
 } 
