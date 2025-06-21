@@ -8,6 +8,54 @@
 
 A comprehensive and production-ready Android library that prevents screenshots and screen recording using Android's `FLAG_SECURE` feature. Built with Kotlin, zero dependencies, and designed for modern Android applications.
 
+## 🚀 Quick Start: Global Protection (Recommended)
+
+The easiest and most effective way to protect your entire app is to enable global screenshot blocking.
+
+### Step 1: Add JitPack and the Dependency
+
+Add JitPack to your `settings.gradle.kts` (or root `build.gradle.kts`):
+```kotlin
+// settings.gradle.kts
+dependencyResolutionManagement {
+    repositories {
+        // ... other repositories
+        maven { url = uri("https://jitpack.io") }
+    }
+}
+```
+
+Then, add the library to your app's `build.gradle.kts`:
+```kotlin
+// app/build.gradle.kts
+dependencies {
+    implementation("com.github.santhoshj001:screenshot-blocker:v1.1.1")
+}
+```
+
+### Step 2: Initialize in Your Application Class
+
+In your `Application` class's `onCreate` method, add the following line:
+
+```kotlin
+import com.sjdroid.screenshotblocker.ScreenshotBlocker
+
+class YourApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        
+        // This single line enables screenshot blocking for all activities.
+        ScreenshotBlocker.init(
+            application = this,
+            enableGlobally = true,
+            debugMode = BuildConfig.DEBUG // Optional but recommended
+        )
+    }
+}
+```
+
+**That's it!** Your entire application is now protected from screenshots and screen recordings where the content is displayed.
+
 ## ✨ Features
 
 - 🔒 **Global & Per-Activity Control** - Protect entire app or specific screens

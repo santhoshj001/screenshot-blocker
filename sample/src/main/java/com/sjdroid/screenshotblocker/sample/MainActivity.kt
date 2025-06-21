@@ -94,6 +94,9 @@ fun ScreenshotBlockerDemo() {
             }
         }
         
+        // --> ADD THIS NEW CARD
+        GlobalBlockingInfoCard()
+        
         // Status Card
         StatusCard(
             isInitialized = isInitialized,
@@ -120,6 +123,34 @@ fun ScreenshotBlockerDemo() {
         
         // Information
         InformationCard()
+    }
+}
+
+@Composable
+fun GlobalBlockingInfoCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.Shield, contentDescription = "Shield Icon", tint = MaterialTheme.colorScheme.onTertiaryContainer)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Global Blocking Enabled",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "This app has global screenshot protection enabled by default in the `SampleApplication.kt` file. This is the recommended setup for most apps.",
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                lineHeight = 20.sp
+            )
+        }
     }
 }
 
@@ -225,7 +256,7 @@ fun QuickActionsCard(
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Icon(Icons.Default.LockOpen, contentDescription = null)
+                    Icon(Icons.Default.Lock, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Unsecure")
                 }
@@ -328,7 +359,7 @@ fun NavigationCard(context: MainActivity) {
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
             ) {
-                Icon(Icons.Default.Security, contentDescription = null)
+                Icon(Icons.Default.Person, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Open @SecureScreen Activity")
             }

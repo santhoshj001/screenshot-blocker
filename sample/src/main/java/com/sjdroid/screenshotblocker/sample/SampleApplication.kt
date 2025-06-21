@@ -5,52 +5,38 @@ import com.sjdroid.screenshotblocker.AnnotationBasedSecurePolicy
 import com.sjdroid.screenshotblocker.ScreenshotBlocker
 
 /**
- * Sample Application demonstrating Screenshot Blocker initialization with various configurations
+ * Sample Application demonstrating the primary use case of the Screenshot Blocker library.
  */
 class SampleApplication : Application() {
     
     override fun onCreate() {
         super.onCreate()
         
-        // Initialize ScreenshotBlocker with comprehensive configuration
+        //
+        // 🚀 CORE FUNCTIONALITY: GLOBAL SCREENSHOT BLOCKING
+        //
+        // This is the simplest and most powerful way to use the library.
+        // By calling init() with `enableGlobally = true`, screenshot blocking will be
+        // automatically enabled for ALL activities in your application.
+        // No per-activity code is required.
+        //
+        // This is the recommended approach for most applications.
+        //
         ScreenshotBlocker.init(
             application = this,
-            enableGlobally = false,  // Let policies control security instead of global flag
-            debugMode = BuildConfig.DEBUG, // Automatically disable in debug builds
-            policy = AnnotationBasedSecurePolicy() // Use annotation-based policy
+            enableGlobally = true, // ✅ This is the key to global protection!
+            debugMode = BuildConfig.DEBUG // Recommended: automatically disables blocking in debug builds
         )
         
-        /* Alternative initialization examples:
-        
-        // Simple global protection:
-        ScreenshotBlocker.init(this)
-        
-        // Global protection with debug override:
-        ScreenshotBlocker.init(this, enableGlobally = true, debugMode = true)
-        
-        // Conditional policy for specific activities:
-        ScreenshotBlocker.init(
-            this, 
-            enableGlobally = false,
-            policy = ConditionalSecurePolicy("LoginActivity", "PaymentActivity")
-        )
-        
-        // Always secure all activities:
-        ScreenshotBlocker.init(
-            this,
-            enableGlobally = false,
-            policy = AlwaysSecurePolicy()
-        )
-        
-        // Combined policies:
-        ScreenshotBlocker.init(
-            this,
-            enableGlobally = false,
-            policy = OrSecurePolicy(
-                AnnotationBasedSecurePolicy(),
-                ConditionalSecurePolicy("PaymentActivity")
-            )
-        )
+        /*
+         For advanced, fine-grained control, you can use policies.
+         Example: Initialize with global blocking disabled and use a policy instead.
+         
+         ScreenshotBlocker.init(
+             application = this,
+             enableGlobally = false,
+             policy = AnnotationBasedSecurePolicy() // Only secures activities with @SecureScreen
+         )
         */
     }
 } 

@@ -42,7 +42,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":screenshotblocker"))
+    // Fetches the library from JitPack, simulating a real-world integration
+    implementation("com.github.santhoshj001:screenshot-blocker:v1.1.1")
+    
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
