@@ -21,6 +21,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "ScreenShotBlocker"
-// include(":screenshotblocker") // We no longer build this module directly for the sample
+// include(":screenshotblocker") // This is commented out to force remote dependency resolution
 include(":sample")
  

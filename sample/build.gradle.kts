@@ -42,8 +42,8 @@ android {
 }
 
 dependencies {
-    // Fetches the library from JitPack, simulating a real-world integration
-    implementation("com.github.santhoshj001:screenshot-blocker:v1.1.1")
+    // This fetches the library from JitPack using the correct release tag.
+    implementation("com.github.santhoshj001:screenshot-blocker:v1.1.2")
     
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material:material-icons-extended")
     
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.sp
 import androidx.activity.compose.setContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.outlined.Shield
 import com.sjdroid.screenshotblocker.*
 
 /**
@@ -134,7 +136,7 @@ fun GlobalBlockingInfoCard() {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Shield, contentDescription = "Shield Icon", tint = MaterialTheme.colorScheme.onTertiaryContainer)
+                Icon(Icons.Outlined.Shield, contentDescription = "Shield Icon", tint = MaterialTheme.colorScheme.onTertiaryContainer)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "Global Blocking Enabled",
