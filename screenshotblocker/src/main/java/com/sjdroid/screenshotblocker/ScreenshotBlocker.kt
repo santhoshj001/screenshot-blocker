@@ -2,90 +2,52 @@ package com.sjdroid.screenshotblocker
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import android.view.WindowManager
-import java.util.concurrent.ConcurrentHashMap
 
 /**
- * ScreenshotBlocker - A comprehensive Android library to block screenshots using FLAG_SECURE
- * 
- * Features:
- * - Global screenshot blocking for all activities
- * - Per-activity control with lifecycle awareness
- * - Debug override for testing
- * - Runtime introspection APIs
- * - Configurable policies for fine-grained control
- * - Uses standard Android APIs only
- * - Lightweight and safe
+ * Simple ScreenshotBlocker - Basic Android library to block screenshots using FLAG_SECURE
  * 
  * Usage:
  * 1. Initialize in Application.onCreate(): ScreenshotBlocker.init(this)
  * 2. Manual control: ScreenshotBlocker.enableFor(activity) / disableFor(activity)
- * 3. Runtime check: ScreenshotBlocker.isSecureEnabled(context)
- * 4. Custom policies: ScreenshotBlocker.setPolicy(ConditionalSecurePolicy("LoginActivity"))
  * 
  * @author Santhosh J.
- * @version 1.1.1
+ * @version 1.1.3-simple
  */
 object ScreenshotBlocker {
     
     private var globalEnable = false
     private var initialized = false
-    private var debugOverride = false
-    private var currentPolicy: WindowSecurePolicy? = null
-    private val secureActivities = ConcurrentHashMap.newKeySet<String>()
+    private val secureActivities = mutableSetOf<String>()
     
     /**
-     * Initialize the ScreenshotBlocker with global settings
+     * Initialize the ScreenshotBlocker
      * 
      * @param application The application instance
      * @param enableGlobally Whether to enable screenshot blocking for all activities automatically
-     * @param debugMode Override to disable security in debug builds (default: auto-detect from BuildConfig)
-     * @param policy Custom policy for determining when to apply screenshot blocking
      */
     @JvmStatic
     @JvmOverloads
-    fun init(
-        application: Application, 
-        enableGlobally: Boolean = true,
-        debugMode: Boolean? = null,
-        policy: WindowSecurePolicy? = null
-    ) {
+    fun init(application: Application, enableGlobally: Boolean = true) {
         if (initialized) {
             return // Already initialized
         }
         
         globalEnable = enableGlobally
         initialized = true
-        currentPolicy = policy
         
-        // Auto-detect debug mode if not specified
-        debugOverride = debugMode ?: try {
-            // More reliable debug detection
-            (application.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
-        } catch (e: Exception) {
-            // Fallback to BuildConfig reflection
-            try {
-                val buildConfigClass = Class.forName("${application.packageName}.BuildConfig")
-                val debugField = buildConfigClass.getField("DEBUG")
-                debugField.getBoolean(null)
-            } catch (e2: Exception) {
-                false // Default to production mode if both methods fail
-            }
-        }
-        
-        application.registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacksAdapter() {
+        application.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                if (shouldSecureActivity(activity)) {
+                if (globalEnable) {
                     enableFor(activity)
                 }
             }
             
             override fun onActivityResumed(activity: Activity) {
-                // Re-apply security when activity resumes (lifecycle-aware)
+                // Re-apply security when activity resumes
                 val activityKey = activity.javaClass.name + "@" + activity.hashCode()
-                if (secureActivities.contains(activityKey) || shouldSecureActivity(activity)) {
+                if (secureActivities.contains(activityKey) || globalEnable) {
                     applySecureFlag(activity, true)
                 }
             }
@@ -95,26 +57,13 @@ object ScreenshotBlocker {
                 val activityKey = activity.javaClass.name + "@" + activity.hashCode()
                 secureActivities.remove(activityKey)
             }
+            
+            override fun onActivityStarted(activity: Activity) {}
+            override fun onActivityPaused(activity: Activity) {}
+            override fun onActivityStopped(activity: Activity) {}
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
         })
     }
-    
-    /**
-     * Set a custom policy for determining when screenshot blocking should be applied
-     * 
-     * @param policy The policy to use, or null to disable policy-based evaluation
-     */
-    @JvmStatic
-    fun setPolicy(policy: WindowSecurePolicy?) {
-        currentPolicy = policy
-    }
-    
-    /**
-     * Get the current policy
-     * 
-     * @return The current policy, or null if no policy is set
-     */
-    @JvmStatic
-    fun getPolicy(): WindowSecurePolicy? = currentPolicy
     
     /**
      * Enable screenshot blocking for a specific activity
@@ -141,23 +90,19 @@ object ScreenshotBlocker {
     }
     
     /**
-     * Check if screenshot blocking is enabled for a specific context
+     * Check if screenshot blocking is enabled for a specific activity
      * 
-     * @param context The context to check (Activity recommended)
+     * @param activity The activity to check
      * @return true if screenshot blocking is enabled, false otherwise
      */
     @JvmStatic
-    fun isSecureEnabled(context: Context): Boolean {
-        if (!initialized || debugOverride) {
+    fun isSecureEnabled(activity: Activity): Boolean {
+        if (!initialized) {
             return false
         }
         
-        if (context is Activity) {
-            val activityKey = context.javaClass.name + "@" + context.hashCode()
-            return secureActivities.contains(activityKey) || shouldSecureActivity(context)
-        }
-        
-        return globalEnable
+        val activityKey = activity.javaClass.name + "@" + activity.hashCode()
+        return secureActivities.contains(activityKey) || globalEnable
     }
     
     /**
@@ -166,7 +111,7 @@ object ScreenshotBlocker {
      * @return true if global blocking is enabled, false otherwise
      */
     @JvmStatic
-    fun isGloballyEnabled(): Boolean = globalEnable && !debugOverride
+    fun isGloballyEnabled(): Boolean = globalEnable
     
     /**
      * Check if the library has been initialized
@@ -177,41 +122,19 @@ object ScreenshotBlocker {
     fun isInitialized(): Boolean = initialized
     
     /**
-     * Check if debug mode is active (security disabled)
+     * Set global enable/disable
      * 
-     * @return true if debug mode is active, false otherwise
+     * @param enable true to enable globally, false to disable
      */
     @JvmStatic
-    fun isDebugMode(): Boolean = debugOverride
-    
-    /**
-     * Get the number of currently secured activities
-     * 
-     * @return count of secured activities
-     */
-    @JvmStatic
-    fun getSecuredActivitiesCount(): Int = secureActivities.size
-    
-    /**
-     * Internal method to determine if an activity should be secured based on current policy
-     */
-    private fun shouldSecureActivity(activity: Activity): Boolean {
-        return when {
-            debugOverride -> false
-            currentPolicy != null -> currentPolicy!!.shouldSecure(activity)
-            else -> globalEnable
-        }
+    fun setGloballyEnabled(enable: Boolean) {
+        globalEnable = enable
     }
     
     /**
      * Internal method to apply or remove the secure flag
      */
     private fun applySecureFlag(activity: Activity, enable: Boolean) {
-        if (debugOverride) {
-            // Skip applying security in debug mode
-            return
-        }
-        
         try {
             // Check if activity is still valid
             if (activity.isFinishing || activity.isDestroyed) {
@@ -228,10 +151,7 @@ object ScreenshotBlocker {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
             }
         } catch (e: Exception) {
-            // Log in debug mode, but don't crash in production
-            if (debugOverride) {
-                android.util.Log.w("ScreenshotBlocker", "Failed to apply secure flag", e)
-            }
+            // Silently ignore errors to prevent crashes
         }
     }
 } 

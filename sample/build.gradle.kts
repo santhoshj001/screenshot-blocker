@@ -42,8 +42,8 @@ android {
 }
 
 dependencies {
-    // This fetches the library from JitPack using the correct release tag.
-    implementation("com.github.santhoshj001:screenshot-blocker:v1.1.2")
+    // This depends on the local module, ensuring the app builds reliably.
+    implementation(project(":screenshotblocker"))
     
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

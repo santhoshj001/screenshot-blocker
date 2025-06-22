@@ -1,37 +1,26 @@
 package com.sjdroid.screenshotblocker.sample
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.activity.compose.setContent
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.outlined.Shield
-import com.sjdroid.screenshotblocker.*
+import com.sjdroid.screenshotblocker.ScreenshotBlocker
 
 /**
- * Clean and comprehensive demonstration of Screenshot Blocker features
+ * Simple test app for Screenshot Blocker
  * 
- * This sample app demonstrates:
- * - Basic enable/disable functionality
- * - Policy-based control
- * - Runtime introspection
- * - Integration patterns
- * - Best practices
+ * This sample app has:
+ * - A simple radio button to enable/disable screenshot blocking
+ * - Status display showing current state
+ * - Clear visual feedback
  */
 class MainActivity : AppCompatActivity() {
     
@@ -44,362 +33,144 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ScreenshotBlockerDemo()
+                    SimpleScreenshotBlockerTest()
                 }
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenshotBlockerDemo() {
+fun SimpleScreenshotBlockerTest() {
     val context = LocalContext.current as MainActivity
     var refreshTrigger by remember { mutableIntStateOf(0) }
     
-    // State derived from library
+    // Get current status
     val isInitialized = remember(refreshTrigger) { ScreenshotBlocker.isInitialized() }
     val isGloballyEnabled = remember(refreshTrigger) { ScreenshotBlocker.isGloballyEnabled() }
-    val isDebugMode = remember(refreshTrigger) { ScreenshotBlocker.isDebugMode() }
     val isThisScreenSecure = remember(refreshTrigger) { ScreenshotBlocker.isSecureEnabled(context) }
-    val securedActivitiesCount = remember(refreshTrigger) { ScreenshotBlocker.getSecuredActivitiesCount() }
-    val currentPolicy = remember(refreshTrigger) { ScreenshotBlocker.getPolicy() }
+    
+    // Local state for radio button
+    var localSecureEnabled by remember { mutableStateOf(isThisScreenSecure) }
     
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         
-        // Header
+        // Title
+        Text(
+            text = "🛡️ Screenshot Blocker Test",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 32.dp)
+        )
+        
+        // Status Card
         Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 32.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = if (isThisScreenSecure) 
+                    MaterialTheme.colorScheme.errorContainer 
+                else 
+                    MaterialTheme.colorScheme.surfaceVariant
+            )
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "🛡️ Screenshot Blocker",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-                Text(
-                    text = "Comprehensive Android Library Demo",
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-                )
-            }
-        }
-        
-        // --> ADD THIS NEW CARD
-        GlobalBlockingInfoCard()
-        
-        // Status Card
-        StatusCard(
-            isInitialized = isInitialized,
-            isGloballyEnabled = isGloballyEnabled,
-            isDebugMode = isDebugMode,
-            isThisScreenSecure = isThisScreenSecure,
-            securedActivitiesCount = securedActivitiesCount,
-            currentPolicy = currentPolicy
-        )
-        
-        // Quick Actions
-        QuickActionsCard(
-            context = context,
-            onRefresh = { refreshTrigger++ }
-        )
-        
-        // Policy Management
-        PolicyManagementCard(
-            onRefresh = { refreshTrigger++ }
-        )
-        
-        // Navigation
-        NavigationCard(context = context)
-        
-        // Information
-        InformationCard()
-    }
-}
-
-@Composable
-fun GlobalBlockingInfoCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Outlined.Shield, contentDescription = "Shield Icon", tint = MaterialTheme.colorScheme.onTertiaryContainer)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Global Blocking Enabled",
+                    text = "Current Status",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
+                
+                Text("Library Initialized: ${if (isInitialized) "✅ YES" else "❌ NO"}")
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("Global Protection: ${if (isGloballyEnabled) "✅ ENABLED" else "❌ DISABLED"}")
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "This Screen Protected: ${if (isThisScreenSecure) "🔒 SECURE" else "🔓 NOT SECURE"}",
+                    fontWeight = FontWeight.Bold,
+                    color = if (isThisScreenSecure) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "This app has global screenshot protection enabled by default in the `SampleApplication.kt` file. This is the recommended setup for most apps.",
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onTertiaryContainer,
-                lineHeight = 20.sp
-            )
         }
-    }
-}
-
-@Composable
-fun StatusCard(
-    isInitialized: Boolean,
-    isGloballyEnabled: Boolean,
-    isDebugMode: Boolean,
-    isThisScreenSecure: Boolean,
-    securedActivitiesCount: Int,
-    currentPolicy: WindowSecurePolicy?
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isThisScreenSecure) 
-                MaterialTheme.colorScheme.errorContainer 
-            else 
-                MaterialTheme.colorScheme.surfaceVariant
-        )
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "📊 Current Status",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
-            
-            StatusRow("Library Initialized", isInitialized)
-            StatusRow("Global Protection", isGloballyEnabled)
-            StatusRow("Debug Mode", isDebugMode)
-            StatusRow("This Screen Protected", isThisScreenSecure)
-            StatusRow("Secured Activities", "$securedActivitiesCount")
-            StatusRow("Active Policy", currentPolicy?.javaClass?.simpleName ?: "None")
-        }
-    }
-}
-
-@Composable
-fun StatusRow(label: String, value: Any) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 2.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = label,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            text = when (value) {
-                is Boolean -> if (value) "✅ Yes" else "❌ No"
-                else -> value.toString()
-            },
-            fontWeight = FontWeight.Medium,
-            color = when (value) {
-                true -> MaterialTheme.colorScheme.primary
-                false -> MaterialTheme.colorScheme.error
-                else -> MaterialTheme.colorScheme.onSurfaceVariant
-            }
-        )
-    }
-}
-
-@Composable
-fun QuickActionsCard(
-    context: MainActivity,
-    onRefresh: () -> Unit
-) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "⚡ Quick Actions",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
-            
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+        
+        // Control Section
+        Card(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button(
-                    onClick = {
-                        ScreenshotBlocker.enableFor(context)
-                        onRefresh()
-                    },
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                Text(
+                    text = "Test Controls",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                
+                // Radio Button for Screenshot Blocking
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(bottom = 16.dp)
                 ) {
-                    Icon(Icons.Default.Lock, contentDescription = null)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Secure")
+                    RadioButton(
+                        selected = localSecureEnabled,
+                        onClick = {
+                            localSecureEnabled = !localSecureEnabled
+                            if (localSecureEnabled) {
+                                ScreenshotBlocker.enableFor(context)
+                            } else {
+                                ScreenshotBlocker.disableFor(context)
+                            }
+                            refreshTrigger++
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = if (localSecureEnabled) "Screenshot Blocking ENABLED" else "Screenshot Blocking DISABLED",
+                        fontSize = 16.sp
+                    )
                 }
                 
-                Button(
-                    onClick = {
-                        ScreenshotBlocker.disableFor(context)
-                        onRefresh()
-                    },
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                ) {
-                    Icon(Icons.Default.Lock, contentDescription = null)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Unsecure")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun PolicyManagementCard(onRefresh: () -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "📋 Policy Management",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
-            
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                PolicyButton(
-                    text = "Always Secure",
-                    description = "All activities protected",
-                    onClick = {
-                        ScreenshotBlocker.setPolicy(AlwaysSecurePolicy())
-                        onRefresh()
-                    }
-                )
-                
-                PolicyButton(
-                    text = "Never Secure",
-                    description = "No activities protected",
-                    onClick = {
-                        ScreenshotBlocker.setPolicy(NeverSecurePolicy())
-                        onRefresh()
-                    }
-                )
-                
-                PolicyButton(
-                    text = "Annotation Based",
-                    description = "Only @SecureScreen activities",
-                    onClick = {
-                        ScreenshotBlocker.setPolicy(AnnotationBasedSecurePolicy())
-                        onRefresh()
-                    }
-                )
-                
-                PolicyButton(
-                    text = "Clear Policy",
-                    description = "Use global settings",
-                    onClick = {
-                        ScreenshotBlocker.setPolicy(null)
-                        onRefresh()
-                    }
+                // Instructions
+                Text(
+                    text = "Try taking a screenshot now to test!",
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             }
         }
-    }
-}
-
-@Composable
-fun PolicyButton(
-    text: String,
-    description: String,
-    onClick: () -> Unit
-) {
-    OutlinedButton(
-        onClick = onClick,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column {
-            Text(
-                text = text,
-                fontWeight = FontWeight.Medium
-            )
-            Text(
-                text = description,
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
-}
-
-@Composable
-fun NavigationCard(context: MainActivity) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "🧭 Navigation",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
-            
-            Button(
-                onClick = {
-                    context.startActivity(Intent(context, SecureActivity::class.java))
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
-            ) {
-                Icon(Icons.Default.Person, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Open @SecureScreen Activity")
+        
+        Spacer(modifier = Modifier.height(32.dp))
+        
+        // Instructions
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "How to Test:",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Text("1. Toggle the radio button above", fontSize = 14.sp)
+                Text("2. Try taking a screenshot", fontSize = 14.sp)
+                Text("3. When ENABLED: Screenshot should be blocked", fontSize = 14.sp)
+                Text("4. When DISABLED: Screenshot should work normally", fontSize = 14.sp)
             }
-        }
-    }
-}
-
-@Composable
-fun InformationCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "ℹ️ About",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            
-            Text(
-                text = """
-                This demo showcases all Screenshot Blocker features:
-                
-                • 🔒 Manual enable/disable for specific activities
-                • 📋 Policy-based automatic control
-                • 🔍 Runtime status introspection
-                • 🎯 Lifecycle-aware behavior
-                • 🐛 Debug mode support
-                • 🧩 Jetpack Compose integration
-                
-                Try taking a screenshot to see the protection in action!
-                """.trimIndent(),
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                lineHeight = 20.sp
-            )
         }
     }
 } 

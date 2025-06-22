@@ -21,6 +21,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "ScreenShotBlocker"
-// include(":screenshotblocker") // This is commented out to force remote dependency resolution
+include(":screenshotblocker")
 include(":sample")
  
