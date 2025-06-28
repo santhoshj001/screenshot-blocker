@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.activity.compose.setContent
 import com.sjdroid.screenshotblocker.ScreenshotBlocker
+import android.app.Activity
 
 /**
  * Simple test app for Screenshot Blocker
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
 @Composable
 fun SimpleScreenshotBlockerTest() {
-    val context = LocalContext.current as MainActivity
+    val context = LocalContext.current as Activity
     var refreshTrigger by remember { mutableIntStateOf(0) }
     
     // Get current status

@@ -21,7 +21,7 @@ Then, add the library dependency to your app-level `build.gradle.kts` file:
 ```kotlin
 // app/build.gradle.kts
 dependencies {
-    implementation('com.github.your-username/screenshot-blocker:1.3.0') // Replace with the actual username and latest version
+    implementation('com.github.santhoshj001/screenshot-blocker:1.3.0') // Replace with the actual username and latest version
 }
 ```
 
