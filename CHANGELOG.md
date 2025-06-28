@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] - 2025-06-28
+
+### Fixed
+- **Memory Leak**: Replaced `activity.hashCode()` with `WeakHashMap<Activity, Boolean>` for robust activity tracking, preventing memory leaks and ensuring correct flag application across lifecycle changes.
+- **`init` Method Idempotency**: Modified `init` to be re-callable, allowing dynamic updates to `enableGlobally`, `debugMode`, and `policy` after initial setup.
+- **Silent Exception Handling**: Improved error handling in `applySecureFlag` to log exceptions, aiding in debugging.
+
+### Added
+- **Policy-Based Security**: Introduced `WindowSecurePolicy` interface and concrete implementations (`AlwaysSecurePolicy`, `NeverSecurePolicy`, `ConditionalSecurePolicy`, `AnnotationBasedSecurePolicy`, `AndSecurePolicy`, `OrSecurePolicy`) for fine-grained control over screenshot blocking.
+- **`@SecureScreen` Annotation**: Added annotation for use with `AnnotationBasedSecurePolicy`.
+- **Runtime Introspection APIs**: Implemented `isDebugMode()`, `getSecuredActivitiesCount()`, `getPolicy()`, and `setPolicy()` for programmatic access to library state and policy management.
+- **`ActivityLifecycleCallbacksAdapter`**: Added utility class as mentioned in documentation.
+
+### Enhanced
+- **Activity Tracking**: Significantly improved reliability of activity tracking across lifecycle events.
+- **Configuration Flexibility**: `init` method now supports dynamic configuration updates.
+- **Debugging**: Enhanced error logging for easier troubleshooting.
+- **Test Coverage**: Expanded unit and instrumented tests to cover new APIs, policy-based logic, and activity lifecycle scenarios.
+
 ## [1.1.2] - 2024-12-22
 
 ### Fixed
